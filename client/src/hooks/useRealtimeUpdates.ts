@@ -14,6 +14,13 @@ export function useRealtimeUpdates() {
     bugReports,
     reportBug,
     addLog,
+    refillRequests,
+    requestRefill,
+    approveRefill,
+    rescheduleRequests,
+    approveReschedule,
+    uploadMedicalRecord,
+    medicalRecords,
   } = useData();
 
   useEffect(() => {
@@ -117,8 +124,59 @@ export function useRealtimeUpdates() {
       }, 9000)
     );
 
+    // Auto-approve refill requests every 40 seconds
+    intervals.push(
+      setInterval(() => {
+        if (Math.random() > 0.7) {
+          const pendingRefills = refillRequests.filter((r) => r.status === "pending");
+          if (pendingRefills.length > 0) {
+            const randomRefill = pendingRefills[Math.floor(Math.random() * pendingRefills.length)];
+            approveRefill(randomRefill.id, "Approved - Continuing treatment");
+            addLog(`Refill approved: ${randomRefill.medicationName}`, "info", "System");
+          }
+        }
+      }, 40000)
+    );
+
+    // Auto-approve reschedule requests every 45 seconds
+    intervals.push(
+      setInterval(() => {
+        if (Math.random() > 0.6 && rescheduleRequests.length > 0) {
+          const pendingReschedules = rescheduleRequests.filter((r) => r.status === "pending");
+          if (pendingReschedules.length > 0) {
+            const randomReschedule = pendingReschedules[Math.floor(Math.random() * pendingReschedules.length)];
+            approveReschedule(randomReschedule.id);
+            addLog(`Appointment rescheduled successfully`, "info", "System");
+          }
+        }
+      }, 45000)
+    );
+
+    // Auto-upload medical records every 50 seconds
+    intervals.push(
+      setInterval(() => {
+        if (Math.random() > 0.75) {
+          const patients = users.filter((u) => u.role === "patient");
+          if (patients.length > 0) {
+            const randomPatient = patients[Math.floor(Math.random() * patients.length)];
+            const recordTypes: Array<"lab-report" | "test-result" | "scan" | "document" | "prescription"> = ["lab-report", "test-result", "scan", "document", "prescription"];
+            const recordType = recordTypes[Math.floor(Math.random() * recordTypes.length)];
+            const titles: Record<string, string> = {
+              "lab-report": "Blood Test Report",
+              "test-result": "COVID-19 Test Result",
+              "scan": "CT Scan Results",
+              "document": "Medical Certificate",
+              "prescription": "Prescription Copy",
+            };
+            uploadMedicalRecord(randomPatient.id, titles[recordType], recordType);
+            addLog(`Medical record uploaded`, "info", "System");
+          }
+        }
+      }, 50000)
+    );
+
     return () => {
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, [appointments, payments, slots, users, prescriptions, bookAppointment, makePayment, addPrescription, reportBug, addLog]);
+  }, [appointments, payments, slots, users, prescriptions, bookAppointment, makePayment, addPrescription, reportBug, addLog, refillRequests, requestRefill, approveRefill, rescheduleRequests, approveReschedule, uploadMedicalRecord, medicalRecords]);
 }

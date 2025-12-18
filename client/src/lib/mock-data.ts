@@ -99,6 +99,44 @@ export interface HealthMetric {
   status: "healthy" | "warning" | "critical";
 }
 
+export interface RefillRequest {
+  id: string;
+  prescriptionId: string;
+  patientId: string;
+  doctorId: string;
+  medicationName: string;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  requestDate: string;
+  responseDate?: string;
+  doctorNotes?: string;
+}
+
+export interface RescheduleRequest {
+  id: string;
+  appointmentId: string;
+  patientId: string;
+  doctorId: string;
+  originalDate: string;
+  requestedDate: string;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  requestDate: string;
+  responseDate?: string;
+}
+
+export interface MedicalRecord {
+  id: string;
+  patientId: string;
+  doctorId?: string;
+  title: string;
+  type: "lab-report" | "test-result" | "scan" | "document" | "prescription";
+  uploadDate: string;
+  fileSize: number;
+  status: "uploaded" | "reviewed" | "archived";
+  notes?: string;
+}
+
 const today = new Date();
 
 export const MOCK_USERS: User[] = [
@@ -260,6 +298,47 @@ export const MOCK_BUG_REPORTS: BugReport[] = [
     severity: "medium",
     status: "in-progress",
     date: addDays(new Date(), -1).toISOString(),
+  },
+];
+
+export const MOCK_REFILL_REQUESTS: RefillRequest[] = [
+  {
+    id: "rf1",
+    prescriptionId: "p1",
+    patientId: "u1",
+    doctorId: "u2",
+    medicationName: "Sertraline",
+    reason: "Ongoing treatment",
+    status: "pending",
+    requestDate: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+export const MOCK_RESCHEDULE_REQUESTS: RescheduleRequest[] = [
+  {
+    id: "rs1",
+    appointmentId: "a1",
+    patientId: "u1",
+    doctorId: "u2",
+    originalDate: setHours(setMinutes(addDays(today, 1), 0), 9).toISOString(),
+    requestedDate: setHours(setMinutes(addDays(today, 3), 0), 14).toISOString(),
+    reason: "Work conflict",
+    status: "pending",
+    requestDate: new Date().toISOString(),
+  },
+];
+
+export const MOCK_MEDICAL_RECORDS: MedicalRecord[] = [
+  {
+    id: "mr1",
+    patientId: "u1",
+    doctorId: "u2",
+    title: "Blood Test Results",
+    type: "lab-report",
+    uploadDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    fileSize: 2048,
+    status: "reviewed",
+    notes: "All values normal",
   },
 ];
 

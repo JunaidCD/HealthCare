@@ -10,6 +10,9 @@ import {
   BugReport,
   HealthMetric,
   DoctorQuality,
+  RefillRequest,
+  RescheduleRequest,
+  MedicalRecord,
   MOCK_USERS,
   MOCK_SLOTS,
   MOCK_APPOINTMENTS,
@@ -19,6 +22,9 @@ import {
   MOCK_PAYMENTS,
   MOCK_BUG_REPORTS,
   MOCK_HEALTH_METRICS,
+  MOCK_REFILL_REQUESTS,
+  MOCK_RESCHEDULE_REQUESTS,
+  MOCK_MEDICAL_RECORDS,
 } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 
@@ -32,6 +38,9 @@ interface DataContextType {
   payments: Payment[];
   bugReports: BugReport[];
   healthMetrics: HealthMetric[];
+  refillRequests: RefillRequest[];
+  rescheduleRequests: RescheduleRequest[];
+  medicalRecords: MedicalRecord[];
   addSlot: (slot: Omit<Slot, "id">) => void;
   bookAppointment: (slotId: string, patientId: string, notes?: string) => void;
   updateAppointmentNotes: (appointmentId: string, notes: string) => void;
@@ -41,6 +50,13 @@ interface DataContextType {
   makePayment: (appointmentId: string, patientId: string, amount: number, method: string) => void;
   reportBug: (title: string, description: string, severity: string) => void;
   getDoctorQuality: (doctorId: string) => DoctorQuality;
+  requestRefill: (prescriptionId: string, patientId: string, doctorId: string, medicationName: string, reason: string) => void;
+  approveRefill: (refillId: string, doctorNotes: string) => void;
+  rejectRefill: (refillId: string, doctorNotes: string) => void;
+  requestReschedule: (appointmentId: string, patientId: string, doctorId: string, requestedDate: string, reason: string) => void;
+  approveReschedule: (rescheduleId: string) => void;
+  rejectReschedule: (rescheduleId: string) => void;
+  uploadMedicalRecord: (patientId: string, title: string, type: "lab-report" | "test-result" | "scan" | "document" | "prescription") => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -55,6 +71,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [payments, setPayments] = useState<Payment[]>(() => JSON.parse(localStorage.getItem("hc_payments") || JSON.stringify(MOCK_PAYMENTS)));
   const [bugReports, setBugReports] = useState<BugReport[]>(() => JSON.parse(localStorage.getItem("hc_bugs") || JSON.stringify(MOCK_BUG_REPORTS)));
   const [healthMetrics, setHealthMetrics] = useState<HealthMetric[]>(() => JSON.parse(localStorage.getItem("hc_health") || JSON.stringify(MOCK_HEALTH_METRICS)));
+  const [refillRequests, setRefillRequests] = useState<RefillRequest[]>(() => JSON.parse(localStorage.getItem("hc_refills") || JSON.stringify(MOCK_REFILL_REQUESTS)));
+  const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>(() => JSON.parse(localStorage.getItem("hc_reschedules") || JSON.stringify(MOCK_RESCHEDULE_REQUESTS)));
+  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>(() => JSON.parse(localStorage.getItem("hc_records") || JSON.stringify(MOCK_MEDICAL_RECORDS)));
 
   const { toast } = useToast();
 
@@ -67,6 +86,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => localStorage.setItem("hc_payments", JSON.stringify(payments)), [payments]);
   useEffect(() => localStorage.setItem("hc_bugs", JSON.stringify(bugReports)), [bugReports]);
   useEffect(() => localStorage.setItem("hc_health", JSON.stringify(healthMetrics)), [healthMetrics]);
+  useEffect(() => localStorage.setItem("hc_refills", JSON.stringify(refillRequests)), [refillRequests]);
+  useEffect(() => localStorage.setItem("hc_reschedules", JSON.stringify(rescheduleRequests)), [rescheduleRequests]);
+  useEffect(() => localStorage.setItem("hc_records", JSON.stringify(medicalRecords)), [medicalRecords]);
 
   const addSlot = (slotData: Omit<Slot, "id">) => {
     const newSlot: Slot = { ...slotData, id: Math.random().toString(36).substr(2, 9) };
@@ -173,6 +195,79 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
+  const requestRefill = (prescriptionId: string, patientId: string, doctorId: string, medicationName: string, reason: string) => {
+    const newRefill: RefillRequest = {
+      id: Math.random().toString(36).substr(2, 9),
+      prescriptionId,
+      patientId,
+      doctorId,
+      medicationName,
+      reason,
+      status: "pending",
+      requestDate: new Date().toISOString(),
+    };
+    setRefillRequests((prev) => [...prev, newRefill]);
+    addLog(`Refill request for ${medicationName}`, "info", "Patient");
+    toast({ title: "Refill Requested", description: "Your medication refill request has been submitted." });
+  };
+
+  const approveRefill = (refillId: string, doctorNotes: string) => {
+    setRefillRequests((prev) => prev.map((r) => r.id === refillId ? { ...r, status: "approved", responseDate: new Date().toISOString(), doctorNotes } : r));
+    addLog(`Refill approved for prescription`, "info", "Doctor");
+    toast({ title: "Refill Approved", description: "Medication refill has been approved." });
+  };
+
+  const rejectRefill = (refillId: string, doctorNotes: string) => {
+    setRefillRequests((prev) => prev.map((r) => r.id === refillId ? { ...r, status: "rejected", responseDate: new Date().toISOString(), doctorNotes } : r));
+    addLog(`Refill rejected`, "warning", "Doctor");
+    toast({ title: "Refill Rejected", description: "Medication refill request has been rejected." });
+  };
+
+  const requestReschedule = (appointmentId: string, patientId: string, doctorId: string, requestedDate: string, reason: string) => {
+    const apt = appointments.find((a) => a.id === appointmentId);
+    const newReschedule: RescheduleRequest = {
+      id: Math.random().toString(36).substr(2, 9),
+      appointmentId,
+      patientId,
+      doctorId,
+      originalDate: apt?.slotId ? slots.find((s) => s.id === apt.slotId)?.start || "" : "",
+      requestedDate,
+      reason,
+      status: "pending",
+      requestDate: new Date().toISOString(),
+    };
+    setRescheduleRequests((prev) => [...prev, newReschedule]);
+    addLog(`Appointment reschedule requested`, "info", "Patient");
+    toast({ title: "Reschedule Requested", description: "Your appointment reschedule request has been submitted." });
+  };
+
+  const approveReschedule = (rescheduleId: string) => {
+    setRescheduleRequests((prev) => prev.map((r) => r.id === rescheduleId ? { ...r, status: "approved", responseDate: new Date().toISOString() } : r));
+    addLog(`Appointment rescheduled`, "info", "Doctor");
+    toast({ title: "Reschedule Approved", description: "Appointment has been rescheduled." });
+  };
+
+  const rejectReschedule = (rescheduleId: string) => {
+    setRescheduleRequests((prev) => prev.map((r) => r.id === rescheduleId ? { ...r, status: "rejected", responseDate: new Date().toISOString() } : r));
+    addLog(`Reschedule request rejected`, "warning", "Doctor");
+    toast({ title: "Reschedule Rejected", description: "Reschedule request could not be approved." });
+  };
+
+  const uploadMedicalRecord = (patientId: string, title: string, type: "lab-report" | "test-result" | "scan" | "document" | "prescription") => {
+    const newRecord: MedicalRecord = {
+      id: Math.random().toString(36).substr(2, 9),
+      patientId,
+      title,
+      type,
+      uploadDate: new Date().toISOString(),
+      fileSize: Math.floor(Math.random() * 5000) + 1000,
+      status: "uploaded",
+    };
+    setMedicalRecords((prev) => [...prev, newRecord]);
+    addLog(`Medical record uploaded: ${title}`, "info", "Patient");
+    toast({ title: "Record Uploaded", description: `${title} has been uploaded to your records.` });
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -185,6 +280,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         payments,
         bugReports,
         healthMetrics,
+        refillRequests,
+        rescheduleRequests,
+        medicalRecords,
         addSlot,
         bookAppointment,
         updateAppointmentNotes,
@@ -194,6 +292,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         makePayment,
         reportBug,
         getDoctorQuality,
+        requestRefill,
+        approveRefill,
+        rejectRefill,
+        requestReschedule,
+        approveReschedule,
+        rejectReschedule,
+        uploadMedicalRecord,
       }}
     >
       {children}
