@@ -9,7 +9,7 @@ import { useState } from "react";
 import { setHours, setMinutes, format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
-function AdminOverview() {
+export function AdminOverview() {
   const { users, slots, appointments } = useData();
 
   return (
@@ -36,7 +36,7 @@ function AdminOverview() {
   );
 }
 
-function AdminUsers() {
+export function AdminUsers() {
   const { users, approveUser } = useData();
 
   return (
@@ -76,7 +76,7 @@ function AdminUsers() {
   );
 }
 
-function AdminSlots() {
+export function AdminSlots() {
   const { users, slots, addSlot } = useData();
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [date, setDate] = useState("");
@@ -156,11 +156,5 @@ function AdminSlots() {
 }
 
 export function AdminDashboard() {
-  return (
-    <Switch>
-      <Route path="/users" component={AdminUsers} />
-      <Route path="/slots" component={AdminSlots} />
-      <Route path="/" component={AdminOverview} />
-    </Switch>
-  );
+  return <AdminOverview />;
 }

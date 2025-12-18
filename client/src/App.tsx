@@ -1,14 +1,14 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route } from "wouter";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { DataProvider } from "@/context/DataContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { LandingPage } from "@/pages/Landing";
 import { LoginPage } from "@/pages/auth/Login";
-import { PatientDashboard } from "@/pages/dashboard/Patient";
-import { DoctorDashboard } from "@/pages/dashboard/Doctor";
-import { AdminDashboard } from "@/pages/dashboard/Admin";
-import { ManagerDashboard } from "@/pages/dashboard/Manager";
-import { ITDashboard } from "@/pages/dashboard/IT";
+import { PatientOverview, PatientBook, PatientHistory, PatientPayments } from "@/pages/dashboard/Patient";
+import { DoctorOverview, DoctorSchedule, DoctorPatients, DoctorPrescriptions } from "@/pages/dashboard/Doctor";
+import { AdminOverview, AdminUsers, AdminSlots } from "@/pages/dashboard/Admin";
+import { ManagerOverview, ManagerFeedback, ManagerBugs, ManagerQuality } from "@/pages/dashboard/Manager";
+import { ITOverview, ITIssues, ITHealth } from "@/pages/dashboard/IT";
 import { Loader2 } from "lucide-react";
 import NotFound from "@/pages/not-found";
 
@@ -22,7 +22,6 @@ function ProtectedRoute({
   const { user, isLoading } = useAuth();
   const [location, setLocation] = useLocation();
 
-  // Redirect happens outside of render
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-background">
@@ -56,6 +55,8 @@ function ProtectedRoute({
   );
 }
 
+import { useLocation } from "wouter";
+
 function Router() {
   return (
     <Switch>
@@ -78,21 +79,68 @@ function Router() {
         <LoginPage role="it" />
       </Route>
 
-      {/* Dashboard Routes */}
-      <Route path="/dashboard/patient*">
-        <ProtectedRoute component={PatientDashboard} allowedRole="patient" />
+      {/* Patient Routes */}
+      <Route path="/dashboard/patient">
+        <ProtectedRoute component={PatientOverview} allowedRole="patient" />
       </Route>
-      <Route path="/dashboard/doctor*">
-        <ProtectedRoute component={DoctorDashboard} allowedRole="doctor" />
+      <Route path="/dashboard/patient/book">
+        <ProtectedRoute component={PatientBook} allowedRole="patient" />
       </Route>
-      <Route path="/dashboard/admin*">
-        <ProtectedRoute component={AdminDashboard} allowedRole="admin" />
+      <Route path="/dashboard/patient/history">
+        <ProtectedRoute component={PatientHistory} allowedRole="patient" />
       </Route>
-      <Route path="/dashboard/manager*">
-        <ProtectedRoute component={ManagerDashboard} allowedRole="manager" />
+      <Route path="/dashboard/patient/payments">
+        <ProtectedRoute component={PatientPayments} allowedRole="patient" />
       </Route>
-      <Route path="/dashboard/it*">
-        <ProtectedRoute component={ITDashboard} allowedRole="it" />
+
+      {/* Doctor Routes */}
+      <Route path="/dashboard/doctor">
+        <ProtectedRoute component={DoctorOverview} allowedRole="doctor" />
+      </Route>
+      <Route path="/dashboard/doctor/schedule">
+        <ProtectedRoute component={DoctorSchedule} allowedRole="doctor" />
+      </Route>
+      <Route path="/dashboard/doctor/patients">
+        <ProtectedRoute component={DoctorPatients} allowedRole="doctor" />
+      </Route>
+      <Route path="/dashboard/doctor/prescriptions">
+        <ProtectedRoute component={DoctorPrescriptions} allowedRole="doctor" />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/dashboard/admin">
+        <ProtectedRoute component={AdminOverview} allowedRole="admin" />
+      </Route>
+      <Route path="/dashboard/admin/users">
+        <ProtectedRoute component={AdminUsers} allowedRole="admin" />
+      </Route>
+      <Route path="/dashboard/admin/slots">
+        <ProtectedRoute component={AdminSlots} allowedRole="admin" />
+      </Route>
+
+      {/* Manager Routes */}
+      <Route path="/dashboard/manager">
+        <ProtectedRoute component={ManagerOverview} allowedRole="manager" />
+      </Route>
+      <Route path="/dashboard/manager/feedback">
+        <ProtectedRoute component={ManagerFeedback} allowedRole="manager" />
+      </Route>
+      <Route path="/dashboard/manager/bugs">
+        <ProtectedRoute component={ManagerBugs} allowedRole="manager" />
+      </Route>
+      <Route path="/dashboard/manager/quality">
+        <ProtectedRoute component={ManagerQuality} allowedRole="manager" />
+      </Route>
+
+      {/* IT Routes */}
+      <Route path="/dashboard/it">
+        <ProtectedRoute component={ITOverview} allowedRole="it" />
+      </Route>
+      <Route path="/dashboard/it/issues">
+        <ProtectedRoute component={ITIssues} allowedRole="it" />
+      </Route>
+      <Route path="/dashboard/it/health">
+        <ProtectedRoute component={ITHealth} allowedRole="it" />
       </Route>
 
       <Route component={NotFound} />

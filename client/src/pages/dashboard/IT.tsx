@@ -53,7 +53,7 @@ function ITLogs() {
   );
 }
 
-function ITIssues() {
+export function ITIssues() {
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Issue Reports</h2>
@@ -91,7 +91,7 @@ function ITIssues() {
   );
 }
 
-function ITOverview() {
+export function ITOverview() {
   const { logs, appointments, users, healthMetrics } = useData();
 
   const recentErrors = logs.filter((l) => l.level === "error").length;
@@ -145,7 +145,7 @@ function ITOverview() {
   );
 }
 
-function ITHealth() {
+export function ITHealth() {
   const { healthMetrics } = useData();
 
   const getStatusColor = (status: string) => {
@@ -181,11 +181,5 @@ function ITHealth() {
 }
 
 export function ITDashboard() {
-  return (
-    <Switch>
-      <Route path="/issues" component={ITIssues} />
-      <Route path="/health" component={ITHealth} />
-      <Route path="/" component={ITOverview} />
-    </Switch>
-  );
+  return <ITOverview />;
 }

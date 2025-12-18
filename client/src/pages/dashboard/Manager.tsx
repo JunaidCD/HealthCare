@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-function ManagerOverview() {
+export function ManagerOverview() {
   const { appointments, feedback } = useData();
 
   const appointmentsByDay = [
@@ -65,7 +65,7 @@ function ManagerOverview() {
   );
 }
 
-function ManagerFeedback() {
+export function ManagerFeedback() {
   const { feedback } = useData();
 
   return (
@@ -96,7 +96,7 @@ function ManagerFeedback() {
   );
 }
 
-function ManagerBugs() {
+export function ManagerBugs() {
   const { bugReports, reportBug } = useData();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -182,7 +182,7 @@ function ManagerBugs() {
   );
 }
 
-function ManagerQuality() {
+export function ManagerQuality() {
   const { users, getDoctorQuality } = useData();
   const doctors = users.filter((u) => u.role === "doctor");
 
@@ -226,12 +226,5 @@ function ManagerQuality() {
 }
 
 export function ManagerDashboard() {
-  return (
-    <Switch>
-      <Route path="/feedback" component={ManagerFeedback} />
-      <Route path="/bugs" component={ManagerBugs} />
-      <Route path="/quality" component={ManagerQuality} />
-      <Route path="/" component={ManagerOverview} />
-    </Switch>
-  );
+  return <ManagerOverview />;
 }

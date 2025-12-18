@@ -1,4 +1,3 @@
-import { Switch, Route, useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -12,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-function PatientOverview() {
+export function PatientOverview() {
   const { user } = useAuth();
   const { appointments, slots, bookAppointment, users } = useData();
   const [bookingNote, setBookingNote] = useState("");
@@ -123,9 +122,9 @@ function PatientOverview() {
   );
 }
 
-function PatientBook() {
+export function PatientBook() {
   const { user } = useAuth();
-  const { slots, appointments, bookAppointment, users } = useData();
+  const { slots, bookAppointment, users } = useData();
   const [bookingNote, setBookingNote] = useState("");
   const availableSlots = slots.filter((s) => s.status === "available");
   const getDoctorName = (id: string) => users.find((u) => u.id === id)?.name || "Unknown";
@@ -174,7 +173,7 @@ function PatientBook() {
   );
 }
 
-function PatientHistory() {
+export function PatientHistory() {
   const { user } = useAuth();
   const { appointments, slots, users, prescriptions } = useData();
   const myAppointments = appointments.filter((a) => a.patientId === user?.id);
@@ -185,7 +184,6 @@ function PatientHistory() {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Medical History & Prescriptions</h2>
       <div className="grid gap-6">
-        {/* Appointments */}
         <div>
           <h3 className="font-semibold mb-3">Past Appointments</h3>
           {myAppointments.length === 0 ? (
@@ -226,7 +224,6 @@ function PatientHistory() {
           )}
         </div>
 
-        {/* Prescriptions */}
         <div>
           <h3 className="font-semibold mb-3">Active Prescriptions</h3>
           {myPrescriptions.length === 0 ? (
@@ -271,9 +268,9 @@ function PatientHistory() {
   );
 }
 
-function PatientPayments() {
+export function PatientPayments() {
   const { user } = useAuth();
-  const { appointments, payments, slots, users, makePayment } = useData();
+  const { appointments, payments, slots, makePayment } = useData();
   const [selectedApt, setSelectedApt] = useState("");
   const [amount, setAmount] = useState("150");
   const [method, setMethod] = useState("card");
@@ -294,7 +291,6 @@ function PatientPayments() {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Payments</h2>
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Make Payment */}
         <Card>
           <CardHeader>
             <CardTitle>Make Payment</CardTitle>
@@ -342,7 +338,6 @@ function PatientPayments() {
           </CardContent>
         </Card>
 
-        {/* Payment History */}
         <Card>
           <CardHeader>
             <CardTitle>Payment History</CardTitle>
@@ -371,12 +366,5 @@ function PatientPayments() {
 }
 
 export function PatientDashboard() {
-  return (
-    <Switch>
-      <Route path="/book" component={PatientBook} />
-      <Route path="/history" component={PatientHistory} />
-      <Route path="/payments" component={PatientPayments} />
-      <Route path="/" component={PatientOverview} />
-    </Switch>
-  );
+  return <PatientOverview />;
 }

@@ -11,7 +11,7 @@ import { useState } from "react";
 import { User, Calendar, ClipboardList, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-function DoctorOverview() {
+export function DoctorOverview() {
   const { user } = useAuth();
   const { appointments, slots, users, updateAppointmentNotes } = useData();
   const [noteText, setNoteText] = useState("");
@@ -81,7 +81,7 @@ function DoctorOverview() {
   );
 }
 
-function DoctorSchedule() {
+export function DoctorSchedule() {
   const { user } = useAuth();
   const { appointments, slots } = useData();
 
@@ -113,7 +113,7 @@ function DoctorSchedule() {
   );
 }
 
-function DoctorPatients() {
+export function DoctorPatients() {
   const { user } = useAuth();
   const { appointments, users, slots, updateAppointmentNotes } = useData();
   const [noteText, setNoteText] = useState("");
@@ -187,7 +187,7 @@ function DoctorPatients() {
   );
 }
 
-function DoctorPrescriptions() {
+export function DoctorPrescriptions() {
   const { user } = useAuth();
   const { appointments, users, addPrescription, prescriptions } = useData();
   const [selectedApt, setSelectedApt] = useState("");
@@ -313,12 +313,5 @@ function DoctorPrescriptions() {
 }
 
 export function DoctorDashboard() {
-  return (
-    <Switch>
-      <Route path="/schedule" component={DoctorSchedule} />
-      <Route path="/patients" component={DoctorPatients} />
-      <Route path="/prescriptions" component={DoctorPrescriptions} />
-      <Route path="/" component={DoctorOverview} />
-    </Switch>
-  );
+  return <DoctorOverview />;
 }
