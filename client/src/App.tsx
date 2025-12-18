@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { DataProvider } from "@/context/DataContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -21,7 +21,7 @@ function ProtectedRoute({
   allowedRole: string;
 }) {
   const { user, isLoading } = useAuth();
-  const [location, setLocation] = require("wouter").useLocation();
+  const [location, setLocation] = useLocation();
 
   if (isLoading) {
     return (
