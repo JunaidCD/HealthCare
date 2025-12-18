@@ -42,6 +42,7 @@ interface DataContextType {
   rescheduleRequests: RescheduleRequest[];
   medicalRecords: MedicalRecord[];
   addSlot: (slot: Omit<Slot, "id">) => void;
+  deleteSlot: (slotId: string) => void;
   bookAppointment: (slotId: string, patientId: string, notes?: string) => void;
   updateAppointmentNotes: (appointmentId: string, notes: string) => void;
   addLog: (message: string, level: "info" | "warning" | "error", source: string) => void;
@@ -95,6 +96,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setSlots((prev) => [...prev, newSlot]);
     addLog(`New slot created for doctor ${slotData.doctorId}`, "info", "Admin");
     toast({ title: "Slot Created", description: "The appointment slot is now available." });
+  };
+
+  const deleteSlot = (slotId: string) => {
+    setSlots((prev) => prev.filter((slot) => slot.id !== slotId));
+    addLog(`Slot ${slotId} deleted`, "info", "Admin");
+    toast({ title: "Slot Deleted", description: "The appointment slot has been removed." });
   };
 
   const bookAppointment = (slotId: string, patientId: string, notes?: string) => {
@@ -284,6 +291,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         rescheduleRequests,
         medicalRecords,
         addSlot,
+        deleteSlot,
         bookAppointment,
         updateAppointmentNotes,
         addLog,
