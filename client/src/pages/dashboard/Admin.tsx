@@ -156,13 +156,11 @@ function AdminSlots() {
 }
 
 export function AdminDashboard() {
-  const [location] = useLocation();
-
   return (
     <Switch>
-      <Route path="/users" component={AdminUsers} />
-      <Route path="/slots" component={AdminSlots} />
-      <Route path="" component={AdminOverview} />
+      <Route path="/dashboard/admin/users" component={AdminUsers} />
+      <Route path="/dashboard/admin/slots" component={AdminSlots} />
+      <Route path="/dashboard/admin" component={AdminOverview} />
     </Switch>
   );
 }

@@ -1,6 +1,7 @@
 import { Switch, Route } from "wouter";
 import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Star } from "lucide-react";
 import { format, parseISO } from "date-fns";
@@ -227,10 +228,10 @@ function ManagerQuality() {
 export function ManagerDashboard() {
   return (
     <Switch>
-      <Route path="/feedback" component={ManagerFeedback} />
-      <Route path="/bugs" component={ManagerBugs} />
-      <Route path="/quality" component={ManagerQuality} />
-      <Route path="" component={ManagerOverview} />
+      <Route path="/dashboard/manager/feedback" component={ManagerFeedback} />
+      <Route path="/dashboard/manager/bugs" component={ManagerBugs} />
+      <Route path="/dashboard/manager/quality" component={ManagerQuality} />
+      <Route path="/dashboard/manager" component={ManagerOverview} />
     </Switch>
   );
 }

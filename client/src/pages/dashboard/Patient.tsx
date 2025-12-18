@@ -371,15 +371,12 @@ function PatientPayments() {
 }
 
 export function PatientDashboard() {
-  const [location] = useLocation();
-  const path = location.split("/dashboard/patient")[1] || "";
-
   return (
     <Switch>
-      <Route path="/book" component={PatientBook} />
-      <Route path="/history" component={PatientHistory} />
-      <Route path="/payments" component={PatientPayments} />
-      <Route path="" component={PatientOverview} />
+      <Route path="/dashboard/patient/book" component={PatientBook} />
+      <Route path="/dashboard/patient/history" component={PatientHistory} />
+      <Route path="/dashboard/patient/payments" component={PatientPayments} />
+      <Route path="/dashboard/patient" component={PatientOverview} />
     </Switch>
   );
 }
