@@ -11,6 +11,7 @@ import { ManagerOverview, ManagerFeedback, ManagerBugs, ManagerQuality } from "@
 import { ITOverview, ITIssues, ITHealth } from "@/pages/dashboard/IT";
 import { Loader2 } from "lucide-react";
 import NotFound from "@/pages/not-found";
+import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 
 function ProtectedRoute({
   component: Component,
@@ -20,7 +21,7 @@ function ProtectedRoute({
   allowedRole: string;
 }) {
   const { user, isLoading } = useAuth();
-  const [location, setLocation] = useLocation();
+  const [location, setLocation] = require("wouter").useLocation();
 
   if (isLoading) {
     return (
@@ -56,6 +57,11 @@ function ProtectedRoute({
 }
 
 import { useLocation } from "wouter";
+
+function RealtimeUpdatesManager() {
+  useRealtimeUpdates();
+  return null;
+}
 
 function Router() {
   return (
@@ -152,6 +158,7 @@ export default function App() {
   return (
     <AuthProvider>
       <DataProvider>
+        <RealtimeUpdatesManager />
         <Router />
       </DataProvider>
     </AuthProvider>
