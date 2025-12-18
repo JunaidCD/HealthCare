@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { 
   User, Stethoscope, ShieldCheck, Activity, Server
 } from "lucide-react";
+import healthcareBg from "@/assets/healthcare-bg.svg";
 
 export function LandingPage() {
   const roles = [
@@ -19,6 +20,15 @@ export function LandingPage() {
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Enhanced healthcare-themed background */}
       <div className="absolute inset-0 z-0">
+        {/* Blurred background image layer */}
+        <div className="absolute inset-0 opacity-35 dark:opacity-25">
+          <img
+            src={healthcareBg}
+            alt="Background"
+            className="w-full h-full object-cover blur-2xl scale-110"
+          />
+        </div>
+
         {/* Base medical-themed gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-teal-900/20 to-purple-900/30 dark:from-blue-950/40 dark:via-teal-950/30 dark:to-purple-950/40" />
         
@@ -97,7 +107,7 @@ export function LandingPage() {
           <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
             <Activity className="text-white h-5 w-5" />
           </div>
-          <span className="text-xl font-bold tracking-tight">MediCare+</span>
+          <span className="text-xl font-bold tracking-tight">Mental Health Care</span>
         </div>
         <ThemeToggle />
       </nav>
@@ -113,11 +123,11 @@ export function LandingPage() {
               Next Generation
             </span>
             <br />
-            <span className="text-primary drop-shadow-lg">Patient Care</span>
+            <span className="text-primary drop-shadow-lg">Mental Health Care</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-            An advanced healthcare patient management system designed for healthcare professionals. 
-            Streamline patient care, appointments, prescriptions, and payments in one secure platform.
+            A mental health care patient management system designed for healthcare professionals.
+            Streamline appointments, prescriptions, and patient care workflows in one secure platform.
           </p>
         </motion.div>
 
@@ -145,7 +155,7 @@ export function LandingPage() {
       </main>
       
       <footer className="relative z-10 border-t border-border/50 py-8 text-center text-sm text-muted-foreground">
-        <p>&copy; 2025 MediCare+ Systems. All rights reserved. Secure Health Data Compliant.</p>
+        <p>&copy; 2025 Mental Health Care Patient Management System. All rights reserved. Secure Health Data Compliant.</p>
       </footer>
     </div>
   );
