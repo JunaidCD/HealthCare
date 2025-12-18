@@ -108,6 +108,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const slot = slots.find((s) => s.id === slotId);
     if (!slot) return;
 
+    // Check for existing patient booking on the same date
+    const slotDate = new Date(slot.start);
+    const patientAppointments = appointments.filter((a) => a.patientId === patientId);
+    
+    const hasSameDayBooking = patientAppointments.some((apt) => {
+      const existingSlot = slots.find((s) => s.id === apt.slotId);
+      if (!existingSlot) return false;
+      const existingDate = new Date(existingSlot.start);
+      return existingDate.toDateString() === slotDate.toDateString();
+    });
+
+    if (hasSameDayBooking) {
+      toast({ 
+        title: "Booking Conflict", 
+        description: "You already have an appointment scheduled for this date. Please choose a different date.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setSlots((prev) => prev.map((s) => (s.id === slotId ? { ...s, status: "booked" } : s)));
 
     const newAppointment: Appointment = {

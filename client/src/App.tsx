@@ -10,6 +10,7 @@ import { AdminOverview, AdminUsers, AdminSlots, ReminderManagement } from "@/pag
 import { ManagerOverview, ManagerFeedback, ManagerBugs, ManagerQuality } from "@/pages/dashboard/Manager";
 import { ITOverview, ITIssues, ITHealth } from "@/pages/dashboard/IT";
 import { Loader2 } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 
@@ -161,6 +162,7 @@ export default function App() {
       <DataProvider>
         <RealtimeUpdatesManager />
         <Router />
+        <Toaster />
       </DataProvider>
     </AuthProvider>
   );
