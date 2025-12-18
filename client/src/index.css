@@ -170,3 +170,14 @@
 .glass-card {
   @apply bg-card/40 backdrop-blur-md border border-white/5 hover:bg-card/60 transition-all duration-300 shadow-lg;
 }
+
+/* Custom gradient animation */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 6s ease infinite;
+}
