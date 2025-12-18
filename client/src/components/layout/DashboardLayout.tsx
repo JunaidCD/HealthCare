@@ -12,6 +12,7 @@ import {
   Settings,
   FileText,
   ShieldAlert,
+  BellRing,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -49,6 +50,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           { icon: LayoutDashboard, label: "Overview", href: "/dashboard/admin" },
           { icon: Users, label: "User Management", href: "/dashboard/admin/users" },
           { icon: Calendar, label: "Slot Management", href: "/dashboard/admin/slots" },
+          { icon: BellRing, label: "Reminder Management", href: "/dashboard/admin/reminders" },
         ];
       case "manager":
         return [

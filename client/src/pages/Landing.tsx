@@ -17,23 +17,63 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Advanced animated background */}
+      {/* Enhanced healthcare-themed background */}
       <div className="absolute inset-0 z-0">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/10 to-teal-900/20 dark:from-blue-950/30 dark:via-purple-950/20 dark:to-teal-950/30" />
+        {/* Base medical-themed gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-teal-900/20 to-purple-900/30 dark:from-blue-950/40 dark:via-teal-950/30 dark:to-purple-950/40" />
         
-        {/* Animated gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/90" />
+        {/* Medical cross pattern overlay */}
+        <div className="absolute inset-0 opacity-20 dark:opacity-15">
+          <div className="h-full w-full" style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+              linear-gradient(45deg, transparent 48%, rgba(14, 165, 233, 0.05) 49%, rgba(14, 165, 233, 0.05) 51%, transparent 52%),
+              linear-gradient(-45deg, transparent 48%, rgba(20, 184, 166, 0.05) 49%, rgba(20, 184, 166, 0.05) 51%, transparent 52%)
+            `,
+            backgroundSize: '100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px'
+          }} />
+        </div>
         
-        {/* Radial gradient for depth */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/8 via-transparent to-transparent animate-pulse" />
+        {/* DNA helix pattern */}
+        <div className="absolute inset-0 opacity-10 dark:opacity-8">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="dna-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(14, 165, 233, 0.3)" strokeWidth="2" fill="none"/>
+                <path d="M0,60 Q25,80 50,60 T100,60" stroke="rgba(20, 184, 166, 0.3)" strokeWidth="2" fill="none"/>
+                <circle cx="25" cy="40" r="3" fill="rgba(14, 165, 233, 0.4)"/>
+                <circle cx="75" cy="40" r="3" fill="rgba(14, 165, 233, 0.4)"/>
+                <circle cx="25" cy="70" r="3" fill="rgba(20, 184, 166, 0.4)"/>
+                <circle cx="75" cy="70" r="3" fill="rgba(20, 184, 166, 0.4)"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dna-pattern)" />
+          </svg>
+        </div>
         
-        {/* Floating particles */}
+        {/* Medical grid pattern */}
+        <div className="absolute inset-0 opacity-5 dark:opacity-3" style={{
+          backgroundImage: `
+            linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }} />
+        
+        {/* Gradient overlay for text visibility */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80" />
+        
+        {/* Animated gradient for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent animate-pulse" />
+        
+        {/* Floating medical particles */}
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute rounded-full bg-primary/5 dark:bg-primary/10 animate-pulse"
+              className="absolute rounded-full bg-primary/8 dark:bg-primary/12 animate-pulse"
               style={{
                 width: Math.random() * 4 + 2 + 'px',
                 height: Math.random() * 4 + 2 + 'px',
@@ -46,13 +86,10 @@ export function LandingPage() {
           ))}
         </div>
         
-        {/* Geometric shapes */}
-        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-tl from-teal-500/10 to-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,_transparent_24px,_hsl(var(--border))_25px,_hsl(var(--border))_26px,_transparent_27px),_linear-gradient(to_bottom,_transparent_24px,_hsl(var(--border))_25px,_hsl(var(--border))_26px,_transparent_27px)] bg-[size:50px_50px] opacity-[0.02] dark:opacity-[0.03]" />
+        {/* Medical-themed blur shapes */}
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-blue-500/15 to-teal-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-tl from-purple-500/15 to-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-teal-500/10 to-purple-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
       </div>
 
       <nav className="relative z-10 px-6 py-6 flex justify-between items-center max-w-7xl mx-auto">

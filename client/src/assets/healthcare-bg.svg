@@ -1,0 +1,60 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.1" />
+      <stop offset="50%" style="stop-color:#14b8a6;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.1" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+    <pattern id="dots" width="60" height="60" patternUnits="userSpaceOnUse">
+      <circle cx="30" cy="30" r="2" fill="rgba(255,255,255,0.05)"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background gradient -->
+  <rect width="1920" height="1080" fill="url(#grad1)"/>
+  
+  <!-- Grid pattern -->
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  
+  <!-- Medical cross patterns -->
+  <g opacity="0.03">
+    <path d="M100,100 L120,100 L120,120 L100,120 Z M105,105 L115,105 L115,115 L105,115 Z" fill="white"/>
+    <path d="M300,200 L320,200 L320,220 L300,220 Z M305,205 L315,205 L315,215 L305,215 Z" fill="white"/>
+    <path d="M500,150 L520,150 L520,170 L500,170 Z M505,155 L515,155 L515,165 L505,165 Z" fill="white"/>
+    <path d="M700,300 L720,300 L720,320 L700,320 Z M705,305 L715,305 L715,315 L705,315 Z" fill="white"/>
+    <path d="M900,250 L920,250 L920,270 L900,270 Z M905,255 L915,255 L915,265 L905,265 Z" fill="white"/>
+    <path d="M1100,350 L1120,350 L1120,370 L1100,370 Z M1105,355 L1115,355 L1115,365 L1105,365 Z" fill="white"/>
+    <path d="M1300,200 L1320,200 L1320,220 L1300,220 Z M1305,205 L1315,205 L1315,215 L1305,215 Z" fill="white"/>
+    <path d="M1500,400 L1520,400 L1520,420 L1500,420 Z M1505,405 L1515,405 L1515,415 L1505,415 Z" fill="white"/>
+    <path d="M1700,300 L1720,300 L1720,320 L1700,320 Z M1705,305 L1715,305 L1715,315 L1705,315 Z" fill="white"/>
+  </g>
+  
+  <!-- DNA helix pattern -->
+  <g opacity="0.02">
+    <path d="M200,500 Q250,450 300,500 T400,500 Q450,450 500,500 T600,500 Q650,450 700,500 T800,500 Q850,450 900,500 T1000,500 Q1050,450 1100,500 T1200,500 Q1250,450 1300,500 T1400,500 Q1450,450 1500,500 T1600,500" 
+          stroke="white" stroke-width="3" fill="none"/>
+    <path d="M200,520 Q250,570 300,520 T400,520 Q450,570 500,520 T600,520 Q650,570 700,520 T800,520 Q850,570 900,520 T1000,520 Q1050,570 1100,520 T1200,520 Q1250,570 1300,520 T1400,520 Q1450,570 1500,520 T1600,520" 
+          stroke="white" stroke-width="3" fill="none"/>
+  </g>
+  
+  <!-- Heartbeat pattern -->
+  <g opacity="0.04">
+    <path d="M100,800 L150,800 L160,750 L170,850 L180,700 L190,900 L200,800 L250,800 L300,800 L310,750 L320,850 L330,700 L340,900 L350,800 L400,800" 
+          stroke="#14b8a6" stroke-width="2" fill="none"/>
+    <path d="M600,850 L650,850 L660,800 L670,900 L680,750 L690,950 L700,850 L750,850 L800,850 L810,800 L820,900 L830,750 L840,950 L850,850 L900,850" 
+          stroke="#0ea5e9" stroke-width="2" fill="none"/>
+    <path d="M1200,820 L1250,820 L1260,770 L1270,870 L1280,720 L1290,920 L1300,820 L1350,820 L1400,820 L1410,770 L1420,870 L1430,720 L1440,920 L1450,820 L1500,820" 
+          stroke="#6366f1" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Dots pattern -->
+  <rect width="1920" height="1080" fill="url(#dots)"/>
+  
+  <!-- Blur circles for depth -->
+  <ellipse cx="200" cy="200" rx="300" ry="300" fill="url(#grad1)" opacity="0.3"/>
+  <ellipse cx="1720" cy="880" rx="400" ry="400" fill="url(#grad1)" opacity="0.2"/>
+  <ellipse cx="960" cy="540" rx="500" ry="500" fill="url(#grad1)" opacity="0.1"/>
+</svg>

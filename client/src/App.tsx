@@ -6,7 +6,7 @@ import { LandingPage } from "@/pages/Landing";
 import { LoginPage } from "@/pages/auth/Login";
 import { PatientOverview, PatientBook, PatientHistory, PatientPayments } from "@/pages/dashboard/Patient";
 import { DoctorOverview, DoctorSchedule, DoctorPatients, DoctorPrescriptions } from "@/pages/dashboard/Doctor";
-import { AdminOverview, AdminUsers, AdminSlots } from "@/pages/dashboard/Admin";
+import { AdminOverview, AdminUsers, AdminSlots, ReminderManagement } from "@/pages/dashboard/Admin";
 import { ManagerOverview, ManagerFeedback, ManagerBugs, ManagerQuality } from "@/pages/dashboard/Manager";
 import { ITOverview, ITIssues, ITHealth } from "@/pages/dashboard/IT";
 import { Loader2 } from "lucide-react";
@@ -120,6 +120,9 @@ function Router() {
       </Route>
       <Route path="/dashboard/admin/slots">
         <ProtectedRoute component={AdminSlots} allowedRole="admin" />
+      </Route>
+      <Route path="/dashboard/admin/reminders">
+        <ProtectedRoute component={ReminderManagement} allowedRole="admin" />
       </Route>
 
       {/* Manager Routes */}

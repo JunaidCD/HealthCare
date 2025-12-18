@@ -155,6 +155,8 @@ export function AdminSlots() {
   );
 }
 
+export { ReminderManagement } from './Admin/ReminderManagement';
+
 export function AdminDashboard() {
   return <AdminOverview />;
 }
