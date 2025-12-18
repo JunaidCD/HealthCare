@@ -49,8 +49,8 @@ export function LandingPage() {
             <span className="text-primary">Patient Care</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-            A comprehensive mental health management system designed for professionals. 
-            Secure, efficient, and patient-centric.
+            An advanced healthcare patient management system designed for healthcare professionals. 
+            Streamline patient care, appointments, prescriptions, and payments in one secure platform.
           </p>
         </motion.div>
 
