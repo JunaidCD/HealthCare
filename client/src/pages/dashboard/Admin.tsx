@@ -241,6 +241,35 @@ export function AdminSlots() {
     const start = setHours(setMinutes(startDate, minutes), hours);
     const end = setMinutes(start, minutes + 30);
 
+    // Check for slot conflicts and limit
+    const doctorSlots = slots.filter(s => s.doctorId === selectedDoctor);
+    const sameDaySlots = doctorSlots.filter(s => {
+      const slotDate = new Date(s.start);
+      return slotDate.toDateString() === startDate.toDateString();
+    });
+
+    // Check time conflict (allowing 30-minute slots with no overlap)
+    const hasTimeConflict = sameDaySlots.some(s => {
+      const existingStart = new Date(s.start);
+      const existingEnd = new Date(s.end);
+      return (start >= existingStart && start < existingEnd) || 
+             (end > existingStart && end <= existingEnd);
+    });
+
+    // Check daily limit (3 slots per doctor per day)
+    const dailySlotCount = sameDaySlots.length;
+    const dailyLimitReached = dailySlotCount >= 3;
+
+    if (hasTimeConflict) {
+      alert("Time conflict: This time slot overlaps with an existing slot for the same doctor. Please choose a different time.");
+      return;
+    }
+
+    if (dailyLimitReached) {
+      alert("Daily limit reached: Maximum 3 slots per day allowed for each doctor. Please choose a different date.");
+      return;
+    }
+
     addSlot({ doctorId: selectedDoctor, start: start.toISOString(), end: end.toISOString(), status: "available" });
     setSelectedDoctor("");
     setDate("");
