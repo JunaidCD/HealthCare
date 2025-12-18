@@ -63,33 +63,38 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  const [users, setUsers] = useState<User[]>(() => JSON.parse(localStorage.getItem("hc_users") || JSON.stringify(MOCK_USERS)));
-  const [slots, setSlots] = useState<Slot[]>(() => JSON.parse(localStorage.getItem("hc_slots") || JSON.stringify(MOCK_SLOTS)));
-  const [appointments, setAppointments] = useState<Appointment[]>(() => JSON.parse(localStorage.getItem("hc_appointments") || JSON.stringify(MOCK_APPOINTMENTS)));
-  const [logs, setLogs] = useState<SystemLog[]>(() => JSON.parse(localStorage.getItem("hc_logs") || JSON.stringify(MOCK_LOGS)));
-  const [feedback, setFeedback] = useState<Feedback[]>(() => JSON.parse(localStorage.getItem("hc_feedback") || JSON.stringify(MOCK_FEEDBACK)));
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>(() => JSON.parse(localStorage.getItem("hc_prescriptions") || JSON.stringify(MOCK_PRESCRIPTIONS)));
-  const [payments, setPayments] = useState<Payment[]>(() => JSON.parse(localStorage.getItem("hc_payments") || JSON.stringify(MOCK_PAYMENTS)));
-  const [bugReports, setBugReports] = useState<BugReport[]>(() => JSON.parse(localStorage.getItem("hc_bugs") || JSON.stringify(MOCK_BUG_REPORTS)));
-  const [healthMetrics, setHealthMetrics] = useState<HealthMetric[]>(() => JSON.parse(localStorage.getItem("hc_health") || JSON.stringify(MOCK_HEALTH_METRICS)));
-  const [refillRequests, setRefillRequests] = useState<RefillRequest[]>(() => JSON.parse(localStorage.getItem("hc_refills") || JSON.stringify(MOCK_REFILL_REQUESTS)));
-  const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>(() => JSON.parse(localStorage.getItem("hc_reschedules") || JSON.stringify(MOCK_RESCHEDULE_REQUESTS)));
-  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>(() => JSON.parse(localStorage.getItem("hc_records") || JSON.stringify(MOCK_MEDICAL_RECORDS)));
+  const [users, setUsers] = useState<User[]>(MOCK_USERS);
+  const [slots, setSlots] = useState<Slot[]>(MOCK_SLOTS);
+  const [appointments, setAppointments] = useState<Appointment[]>(MOCK_APPOINTMENTS);
+  const [logs, setLogs] = useState<SystemLog[]>(MOCK_LOGS);
+  const [feedback, setFeedback] = useState<Feedback[]>(MOCK_FEEDBACK);
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>(MOCK_PRESCRIPTIONS);
+  const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
+  const [bugReports, setBugReports] = useState<BugReport[]>(MOCK_BUG_REPORTS);
+  const [healthMetrics, setHealthMetrics] = useState<HealthMetric[]>(MOCK_HEALTH_METRICS);
+  const [refillRequests, setRefillRequests] = useState<RefillRequest[]>(MOCK_REFILL_REQUESTS);
+  const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>(MOCK_RESCHEDULE_REQUESTS);
+  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>(MOCK_MEDICAL_RECORDS);
 
   const { toast } = useToast();
 
-  useEffect(() => localStorage.setItem("hc_users", JSON.stringify(users)), [users]);
-  useEffect(() => localStorage.setItem("hc_slots", JSON.stringify(slots)), [slots]);
-  useEffect(() => localStorage.setItem("hc_appointments", JSON.stringify(appointments)), [appointments]);
-  useEffect(() => localStorage.setItem("hc_logs", JSON.stringify(logs)), [logs]);
-  useEffect(() => localStorage.setItem("hc_feedback", JSON.stringify(feedback)), [feedback]);
-  useEffect(() => localStorage.setItem("hc_prescriptions", JSON.stringify(prescriptions)), [prescriptions]);
-  useEffect(() => localStorage.setItem("hc_payments", JSON.stringify(payments)), [payments]);
-  useEffect(() => localStorage.setItem("hc_bugs", JSON.stringify(bugReports)), [bugReports]);
-  useEffect(() => localStorage.setItem("hc_health", JSON.stringify(healthMetrics)), [healthMetrics]);
-  useEffect(() => localStorage.setItem("hc_refills", JSON.stringify(refillRequests)), [refillRequests]);
-  useEffect(() => localStorage.setItem("hc_reschedules", JSON.stringify(rescheduleRequests)), [rescheduleRequests]);
-  useEffect(() => localStorage.setItem("hc_records", JSON.stringify(medicalRecords)), [medicalRecords]);
+  useEffect(() => {
+    const keys = [
+      "hc_users",
+      "hc_slots",
+      "hc_appointments",
+      "hc_logs",
+      "hc_feedback",
+      "hc_prescriptions",
+      "hc_payments",
+      "hc_bugs",
+      "hc_health",
+      "hc_refills",
+      "hc_reschedules",
+      "hc_records",
+    ];
+    keys.forEach((k) => localStorage.removeItem(k));
+  }, []);
 
   const addSlot = (slotData: Omit<Slot, "id">) => {
     const newSlot: Slot = { ...slotData, id: Math.random().toString(36).substr(2, 9) };

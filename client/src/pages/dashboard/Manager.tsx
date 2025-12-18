@@ -13,6 +13,54 @@ import { Badge } from "@/components/ui/badge";
 
 export function ManagerOverview() {
   const { appointments, feedback } = useData();
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleUnlock = () => {
+    if (password === "123") {
+      setIsUnlocked(true);
+      setError("");
+      setPassword("");
+      return;
+    }
+
+    setError("Incorrect password. Please try again.");
+  };
+
+  if (!isUnlocked) {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold">Performance</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>Password Required</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Enter password to view Performance</label>
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleUnlock();
+                }}
+              />
+              {error && <p className="text-sm text-red-500">{error}</p>}
+            </div>
+            <Button onClick={handleUnlock} className="w-full" disabled={!password.trim()}>
+              Unlock
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const appointmentsByDay = [
     { name: 'Mon', count: 4 },
