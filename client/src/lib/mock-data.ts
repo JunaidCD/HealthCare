@@ -11,16 +11,17 @@ export interface User {
   email: string;
   role: Role;
   avatar?: string;
-  specialty?: string; // For doctors
+  specialty?: string;
   status: "active" | "inactive";
   joinedDate: string;
+  rating?: number;
 }
 
 export interface Slot {
   id: string;
   doctorId: string;
-  start: string; // ISO string
-  end: string; // ISO string
+  start: string;
+  end: string;
   status: "available" | "booked" | "cancelled";
 }
 
@@ -51,7 +52,53 @@ export interface Feedback {
   date: string;
 }
 
-// Initial Data Generation
+export interface Prescription {
+  id: string;
+  appointmentId: string;
+  doctorId: string;
+  patientId: string;
+  medications: { name: string; dosage: string; frequency: string; duration: string }[];
+  instructions: string;
+  createdDate: string;
+  expiryDate: string;
+}
+
+export interface Payment {
+  id: string;
+  appointmentId: string;
+  patientId: string;
+  amount: number;
+  status: "pending" | "completed" | "failed";
+  method: "card" | "bank" | "wallet";
+  date: string;
+}
+
+export interface BugReport {
+  id: string;
+  reportedBy: string;
+  title: string;
+  description: string;
+  severity: "low" | "medium" | "high" | "critical";
+  status: "open" | "in-progress" | "resolved";
+  date: string;
+}
+
+export interface DoctorQuality {
+  doctorId: string;
+  appointmentCount: number;
+  avgRating: number;
+  completionRate: number;
+  patientSatisfaction: number;
+}
+
+export interface HealthMetric {
+  id: string;
+  metric: string;
+  value: number | string;
+  timestamp: string;
+  status: "healthy" | "warning" | "critical";
+}
+
 const today = new Date();
 
 export const MOCK_USERS: User[] = [
@@ -73,6 +120,7 @@ export const MOCK_USERS: User[] = [
     specialty: "Psychiatrist",
     status: "active",
     joinedDate: "2023-05-20",
+    rating: 4.8,
   },
   {
     id: "u3",
@@ -107,6 +155,7 @@ export const MOCK_USERS: User[] = [
     specialty: "Clinical Psychologist",
     status: "active",
     joinedDate: "2023-08-12",
+    rating: 4.6,
   },
 ];
 
@@ -171,5 +220,76 @@ export const MOCK_FEEDBACK: Feedback[] = [
     rating: 5,
     comment: "Dr. Smith was very understanding and helpful.",
     date: addDays(new Date(), -2).toISOString(),
+  },
+];
+
+export const MOCK_PRESCRIPTIONS: Prescription[] = [
+  {
+    id: "p1",
+    appointmentId: "a1",
+    doctorId: "u2",
+    patientId: "u1",
+    medications: [
+      { name: "Sertraline", dosage: "50mg", frequency: "Once daily", duration: "30 days" },
+      { name: "Melatonin", dosage: "5mg", frequency: "At bedtime", duration: "30 days" },
+    ],
+    instructions: "Take with food. Avoid alcohol. Report any side effects immediately.",
+    createdDate: new Date().toISOString(),
+    expiryDate: addDays(new Date(), 90).toISOString(),
+  },
+];
+
+export const MOCK_PAYMENTS: Payment[] = [
+  {
+    id: "py1",
+    appointmentId: "a1",
+    patientId: "u1",
+    amount: 150,
+    status: "completed",
+    method: "card",
+    date: new Date().toISOString(),
+  },
+];
+
+export const MOCK_BUG_REPORTS: BugReport[] = [
+  {
+    id: "b1",
+    reportedBy: "u4",
+    title: "Login page slow on mobile",
+    description: "Login takes 5+ seconds on mobile devices",
+    severity: "medium",
+    status: "in-progress",
+    date: addDays(new Date(), -1).toISOString(),
+  },
+];
+
+export const MOCK_HEALTH_METRICS: HealthMetric[] = [
+  {
+    id: "h1",
+    metric: "CPU Usage",
+    value: "42%",
+    timestamp: new Date().toISOString(),
+    status: "healthy",
+  },
+  {
+    id: "h2",
+    metric: "Memory Usage",
+    value: "68%",
+    timestamp: new Date().toISOString(),
+    status: "warning",
+  },
+  {
+    id: "h3",
+    metric: "Database Response",
+    value: "120ms",
+    timestamp: new Date().toISOString(),
+    status: "healthy",
+  },
+  {
+    id: "h4",
+    metric: "API Availability",
+    value: "99.97%",
+    timestamp: new Date().toISOString(),
+    status: "healthy",
   },
 ];

@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
-import { User, Calendar, ClipboardList } from "lucide-react";
+import { User, Calendar, ClipboardList, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 function DoctorOverview() {
   const { user } = useAuth();
@@ -186,6 +187,131 @@ function DoctorPatients() {
   );
 }
 
+function DoctorPrescriptions() {
+  const { user } = useAuth();
+  const { appointments, users, addPrescription, prescriptions } = useData();
+  const [selectedApt, setSelectedApt] = useState("");
+  const [medications, setMedications] = useState([{ name: "", dosage: "", frequency: "", duration: "" }]);
+  const [instructions, setInstructions] = useState("");
+
+  const myAppointments = appointments.filter((a) => a.doctorId === user?.id);
+  const myPrescriptions = prescriptions.filter((p) => p.doctorId === user?.id);
+  const getPatient = (id: string) => users.find((u) => u.id === id);
+
+  const handleAddMedication = () => {
+    setMedications([...medications, { name: "", dosage: "", frequency: "", duration: "" }]);
+  };
+
+  const handleGeneratePrescription = () => {
+    if (selectedApt && medications.some((m) => m.name)) {
+      const apt = myAppointments.find((a) => a.id === selectedApt);
+      if (apt) {
+        addPrescription({
+          appointmentId: selectedApt,
+          doctorId: user!.id,
+          patientId: apt.patientId,
+          medications: medications.filter((m) => m.name),
+          instructions,
+          createdDate: new Date().toISOString(),
+          expiryDate: format(new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"),
+        });
+        setSelectedApt("");
+        setMedications([{ name: "", dosage: "", frequency: "", duration: "" }]);
+        setInstructions("");
+      }
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Generate Prescriptions</h2>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>New Prescription</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 max-h-[500px] overflow-y-auto">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Patient Appointment</label>
+              <select
+                className="w-full px-3 py-2 border rounded-md bg-background"
+                value={selectedApt}
+                onChange={(e) => setSelectedApt(e.target.value)}
+              >
+                <option value="">Select appointment</option>
+                {myAppointments.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {getPatient(a.patientId)?.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-3">
+              <p className="font-medium text-sm">Medications</p>
+              {medications.map((med, idx) => (
+                <div key={idx} className="space-y-2 p-3 border rounded bg-muted/20">
+                  <Input placeholder="Medicine name" value={med.name} onChange={(e) => {
+                    const updated = [...medications];
+                    updated[idx].name = e.target.value;
+                    setMedications(updated);
+                  }} />
+                  <Input placeholder="Dosage (e.g. 50mg)" value={med.dosage} onChange={(e) => {
+                    const updated = [...medications];
+                    updated[idx].dosage = e.target.value;
+                    setMedications(updated);
+                  }} />
+                  <Input placeholder="Frequency (e.g. Once daily)" value={med.frequency} onChange={(e) => {
+                    const updated = [...medications];
+                    updated[idx].frequency = e.target.value;
+                    setMedications(updated);
+                  }} />
+                  <Input placeholder="Duration (e.g. 30 days)" value={med.duration} onChange={(e) => {
+                    const updated = [...medications];
+                    updated[idx].duration = e.target.value;
+                    setMedications(updated);
+                  }} />
+                </div>
+              ))}
+              <Button onClick={handleAddMedication} variant="outline" className="w-full text-xs">+ Add Medication</Button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Instructions</label>
+              <Textarea placeholder="e.g., Take with food, avoid alcohol..." value={instructions} onChange={(e) => setInstructions(e.target.value)} className="min-h-[80px]" />
+            </div>
+
+            <Button onClick={handleGeneratePrescription} className="w-full" disabled={!selectedApt || !medications.some((m) => m.name)}>
+              Generate Prescription
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Generated Prescriptions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-[500px] overflow-y-auto">
+              {myPrescriptions.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No prescriptions generated yet.</p>
+              ) : (
+                myPrescriptions.map((p) => (
+                  <div key={p.id} className="p-3 border rounded bg-blue-50/10 border-blue-200/30">
+                    <p className="font-medium text-sm">{getPatient(p.patientId)?.name}</p>
+                    <p className="text-xs text-muted-foreground">{p.medications.length} medication(s)</p>
+                    <p className="text-xs text-muted-foreground mt-1">{format(parseISO(p.createdDate), "MMM d, yyyy")}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
 export function DoctorDashboard() {
   const [location] = useLocation();
 
@@ -193,6 +319,7 @@ export function DoctorDashboard() {
     <Switch>
       <Route path="/schedule" component={DoctorSchedule} />
       <Route path="/patients" component={DoctorPatients} />
+      <Route path="/prescriptions" component={DoctorPrescriptions} />
       <Route path="" component={DoctorOverview} />
     </Switch>
   );

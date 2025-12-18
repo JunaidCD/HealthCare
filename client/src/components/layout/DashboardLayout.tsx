@@ -35,12 +35,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           { icon: LayoutDashboard, label: "Overview", href: "/dashboard/patient" },
           { icon: Calendar, label: "Book Appointment", href: "/dashboard/patient/book" },
           { icon: FileText, label: "My History", href: "/dashboard/patient/history" },
+          { icon: FileText, label: "Payments", href: "/dashboard/patient/payments" },
         ];
       case "doctor":
         return [
           { icon: LayoutDashboard, label: "Overview", href: "/dashboard/doctor" },
           { icon: Calendar, label: "Schedule", href: "/dashboard/doctor/schedule" },
           { icon: Users, label: "Patients", href: "/dashboard/doctor/patients" },
+          { icon: FileText, label: "Prescriptions", href: "/dashboard/doctor/prescriptions" },
         ];
       case "admin":
         return [
@@ -52,11 +54,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         return [
           { icon: Activity, label: "Performance", href: "/dashboard/manager" },
           { icon: Users, label: "Feedback", href: "/dashboard/manager/feedback" },
+          { icon: ShieldAlert, label: "Bug Reports", href: "/dashboard/manager/bugs" },
+          { icon: Users, label: "Doctor Quality", href: "/dashboard/manager/quality" },
         ];
       case "it":
         return [
           { icon: Server, label: "System Logs", href: "/dashboard/it" },
           { icon: ShieldAlert, label: "Issues", href: "/dashboard/it/issues" },
+          { icon: Activity, label: "Health", href: "/dashboard/it/health" },
         ];
       default:
         return [];

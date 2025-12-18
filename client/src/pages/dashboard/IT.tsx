@@ -92,7 +92,7 @@ function ITIssues() {
 }
 
 function ITOverview() {
-  const { logs, appointments, users } = useData();
+  const { logs, appointments, users, healthMetrics } = useData();
 
   const recentErrors = logs.filter((l) => l.level === "error").length;
 
@@ -145,10 +145,46 @@ function ITOverview() {
   );
 }
 
+function ITHealth() {
+  const { healthMetrics } = useData();
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "healthy": return "bg-green-100/50 border-green-300 text-green-700";
+      case "warning": return "bg-yellow-100/50 border-yellow-300 text-yellow-700";
+      case "critical": return "bg-red-100/50 border-red-300 text-red-700";
+      default: return "";
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Website Health Dashboard</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        {healthMetrics.map((metric) => (
+          <Card key={metric.id} className={`border ${getStatusColor(metric.status)}`}>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <p className="font-semibold">{metric.metric}</p>
+                <Badge variant={metric.status === "healthy" ? "outline" : "secondary"} className="text-xs">
+                  {metric.status.toUpperCase()}
+                </Badge>
+              </div>
+              <div className="text-3xl font-bold">{metric.value}</div>
+              <p className="text-xs text-muted-foreground mt-2">{format(parseISO(metric.timestamp), "HH:mm:ss")}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function ITDashboard() {
   return (
     <Switch>
       <Route path="/issues" component={ITIssues} />
+      <Route path="/health" component={ITHealth} />
       <Route path="" component={ITOverview} />
     </Switch>
   );
