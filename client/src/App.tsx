@@ -56,8 +56,6 @@ function ProtectedRoute({
   );
 }
 
-import { useLocation } from "wouter";
-
 function RealtimeUpdatesManager() {
   useRealtimeUpdates();
   return null;
