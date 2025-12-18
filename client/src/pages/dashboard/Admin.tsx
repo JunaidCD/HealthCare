@@ -158,9 +158,9 @@ function AdminSlots() {
 export function AdminDashboard() {
   return (
     <Switch>
-      <Route path="/dashboard/admin/users" component={AdminUsers} />
-      <Route path="/dashboard/admin/slots" component={AdminSlots} />
-      <Route path="/dashboard/admin" component={AdminOverview} />
+      <Route path="/users" component={AdminUsers} />
+      <Route path="/slots" component={AdminSlots} />
+      <Route path="/" component={AdminOverview} />
     </Switch>
   );
 }

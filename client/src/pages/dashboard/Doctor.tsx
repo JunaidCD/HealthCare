@@ -315,10 +315,10 @@ function DoctorPrescriptions() {
 export function DoctorDashboard() {
   return (
     <Switch>
-      <Route path="/dashboard/doctor/schedule" component={DoctorSchedule} />
-      <Route path="/dashboard/doctor/patients" component={DoctorPatients} />
-      <Route path="/dashboard/doctor/prescriptions" component={DoctorPrescriptions} />
-      <Route path="/dashboard/doctor" component={DoctorOverview} />
+      <Route path="/schedule" component={DoctorSchedule} />
+      <Route path="/patients" component={DoctorPatients} />
+      <Route path="/prescriptions" component={DoctorPrescriptions} />
+      <Route path="/" component={DoctorOverview} />
     </Switch>
   );
 }

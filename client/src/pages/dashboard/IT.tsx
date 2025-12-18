@@ -183,9 +183,9 @@ function ITHealth() {
 export function ITDashboard() {
   return (
     <Switch>
-      <Route path="/dashboard/it/issues" component={ITIssues} />
-      <Route path="/dashboard/it/health" component={ITHealth} />
-      <Route path="/dashboard/it" component={ITOverview} />
+      <Route path="/issues" component={ITIssues} />
+      <Route path="/health" component={ITHealth} />
+      <Route path="/" component={ITOverview} />
     </Switch>
   );
 }

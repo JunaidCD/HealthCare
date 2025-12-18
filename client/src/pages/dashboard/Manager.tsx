@@ -228,10 +228,10 @@ function ManagerQuality() {
 export function ManagerDashboard() {
   return (
     <Switch>
-      <Route path="/dashboard/manager/feedback" component={ManagerFeedback} />
-      <Route path="/dashboard/manager/bugs" component={ManagerBugs} />
-      <Route path="/dashboard/manager/quality" component={ManagerQuality} />
-      <Route path="/dashboard/manager" component={ManagerOverview} />
+      <Route path="/feedback" component={ManagerFeedback} />
+      <Route path="/bugs" component={ManagerBugs} />
+      <Route path="/quality" component={ManagerQuality} />
+      <Route path="/" component={ManagerOverview} />
     </Switch>
   );
 }
