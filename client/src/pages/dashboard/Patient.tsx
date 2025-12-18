@@ -1,5 +1,6 @@
-import { useData } from "@/context/DataContext";
+import { Switch, Route, useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
+import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, User as UserIcon, FileText } from "lucide-react";
@@ -9,7 +10,7 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 
-export function PatientDashboard() {
+function PatientOverview() {
   const { user } = useAuth();
   const { appointments, slots, bookAppointment, users } = useData();
   const [bookingNote, setBookingNote] = useState("");
@@ -47,30 +48,26 @@ export function PatientDashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Appointments List */}
-        <Card className="col-span-1">
+        <Card>
           <CardHeader>
-            <CardTitle>My Appointments</CardTitle>
-            <CardDescription>Your scheduled and past visits.</CardDescription>
+            <CardTitle>Recent Appointments</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {myAppointments.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No appointments found.</p>
+                <p className="text-sm text-muted-foreground">No appointments yet.</p>
               ) : (
-                myAppointments.map((apt) => {
+                myAppointments.slice(-3).map((apt) => {
                   const slot = slots.find((s) => s.id === apt.slotId);
                   return (
                     <div
                       key={apt.id}
-                      className="flex items-center justify-between p-4 border rounded-lg bg-card/50 hover:bg-card/80 transition-colors"
+                      className="flex items-center justify-between p-3 border rounded-lg bg-card/50"
                     >
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {getDoctorName(apt.doctorId)}
-                        </p>
+                      <div>
+                        <p className="text-sm font-medium">{getDoctorName(apt.doctorId)}</p>
                         <p className="text-xs text-muted-foreground">
-                          {slot ? format(parseISO(slot.start), "PPP p") : "Date Unknown"}
+                          {slot ? format(parseISO(slot.start), "PPP p") : "Unknown"}
                         </p>
                       </div>
                       <Badge variant={apt.status === "scheduled" ? "default" : "secondary"}>
@@ -84,34 +81,21 @@ export function PatientDashboard() {
           </CardContent>
         </Card>
 
-        {/* Booking Section */}
-        <Card className="col-span-1">
+        <Card>
           <CardHeader>
-            <CardTitle>Book New Appointment</CardTitle>
-            <CardDescription>Available slots from our specialists.</CardDescription>
+            <CardTitle>Quick Book</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+            <div className="space-y-2 max-h-[250px] overflow-y-auto">
               {availableSlots.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No slots available currently.</p>
+                <p className="text-sm text-muted-foreground">No slots available.</p>
               ) : (
-                availableSlots.map((slot) => (
-                  <div
-                    key={slot.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:border-primary/50 transition-colors group"
-                  >
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">{getDoctorName(slot.doctorId)}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {format(parseISO(slot.start), "PPP")}
-                      </p>
-                      <p className="text-xs text-primary font-mono">
-                        {format(parseISO(slot.start), "p")} - {format(parseISO(slot.end), "p")}
-                      </p>
-                    </div>
+                availableSlots.slice(0, 3).map((slot) => (
+                  <div key={slot.id} className="flex items-center justify-between p-2 border rounded text-sm">
+                    <span>{getDoctorName(slot.doctorId)} - {format(parseISO(slot.start), "p")}</span>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">Book</Button>
+                        <Button size="sm" variant="outline">Book</Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -119,25 +103,10 @@ export function PatientDashboard() {
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                           <p className="text-sm text-muted-foreground">
-                            Booking with <strong>{getDoctorName(slot.doctorId)}</strong> on{" "}
-                            {format(parseISO(slot.start), "PPP p")}
+                            {getDoctorName(slot.doctorId)} - {format(parseISO(slot.start), "PPP p")}
                           </p>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Reason for visit (Optional)</label>
-                            <Textarea
-                              value={bookingNote}
-                              onChange={(e) => setBookingNote(e.target.value)}
-                              placeholder="Briefly describe your symptoms..."
-                            />
-                          </div>
-                          <Button
-                            onClick={() => {
-                              if (user) bookAppointment(slot.id, user.id, bookingNote);
-                            }}
-                            className="w-full"
-                          >
-                            Confirm Booking
-                          </Button>
+                          <Textarea placeholder="Reason for visit (optional)..." value={bookingNote} onChange={(e) => setBookingNote(e.target.value)} />
+                          <Button onClick={() => { if (user) bookAppointment(slot.id, user.id, bookingNote); setBookingNote(""); }} className="w-full">Confirm</Button>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -149,5 +118,118 @@ export function PatientDashboard() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function PatientBook() {
+  const { user } = useAuth();
+  const { slots, appointments, bookAppointment, users } = useData();
+  const [bookingNote, setBookingNote] = useState("");
+  const availableSlots = slots.filter((s) => s.status === "available");
+  const getDoctorName = (id: string) => users.find((u) => u.id === id)?.name || "Unknown";
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Book an Appointment</h2>
+      <div className="grid gap-4">
+        {availableSlots.length === 0 ? (
+          <Card><CardContent className="pt-6 text-center text-muted-foreground">No available slots at this time.</CardContent></Card>
+        ) : (
+          availableSlots.map((slot) => (
+            <Card key={slot.id} className="hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">{getDoctorName(slot.doctorId)}</h3>
+                    <p className="text-sm text-muted-foreground">{format(parseISO(slot.start), "PPPP p")}</p>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button>Book Now</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader><DialogTitle>Book Appointment</DialogTitle></DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="p-4 bg-muted rounded-lg">
+                          <p className="text-sm font-medium">{getDoctorName(slot.doctorId)}</p>
+                          <p className="text-sm text-muted-foreground">{format(parseISO(slot.start), "PPPP p")}</p>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Reason for visit</label>
+                          <Textarea placeholder="Describe your symptoms or concerns..." value={bookingNote} onChange={(e) => setBookingNote(e.target.value)} />
+                        </div>
+                        <Button onClick={() => { if (user) bookAppointment(slot.id, user.id, bookingNote); setBookingNote(""); }} className="w-full">Confirm Booking</Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PatientHistory() {
+  const { user } = useAuth();
+  const { appointments, slots, users } = useData();
+  const myAppointments = appointments.filter((a) => a.patientId === user?.id);
+  const getDoctorName = (id: string) => users.find((u) => u.id === id)?.name || "Unknown";
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Medical History</h2>
+      {myAppointments.length === 0 ? (
+        <Card><CardContent className="pt-6 text-center text-muted-foreground">No appointment history yet.</CardContent></Card>
+      ) : (
+        <div className="grid gap-4">
+          {myAppointments.map((apt) => {
+            const slot = slots.find((s) => s.id === apt.slotId);
+            return (
+              <Card key={apt.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{getDoctorName(apt.doctorId)}</CardTitle>
+                      <CardDescription>{slot ? format(parseISO(slot.start), "PPPP p") : "Unknown Date"}</CardDescription>
+                    </div>
+                    <Badge>{apt.status}</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <p className="text-sm font-medium mb-1">Visit Notes</p>
+                    <p className="text-sm text-muted-foreground italic">{apt.notes || "No notes available."}</p>
+                  </div>
+                  {apt.history && apt.history.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium mb-1">Progress History</p>
+                      <div className="text-xs text-muted-foreground space-y-1">
+                        {apt.history.map((h, i) => <div key={i}>• {h}</div>)}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function PatientDashboard() {
+  const [location] = useLocation();
+  const path = location.split("/dashboard/patient")[1] || "";
+
+  return (
+    <Switch>
+      <Route path="/book" component={PatientBook} />
+      <Route path="/history" component={PatientHistory} />
+      <Route path="" component={PatientOverview} />
+    </Switch>
   );
 }

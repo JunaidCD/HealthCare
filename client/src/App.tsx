@@ -20,8 +20,9 @@ function ProtectedRoute({
   allowedRole: string;
 }) {
   const { user, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
+  // Redirect happens outside of render
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-background">
@@ -30,13 +31,10 @@ function ProtectedRoute({
     );
   }
 
-  if (!user) {
-    // Redirect to the specific login page for this role
-    setLocation(`/login/${allowedRole}`);
-    return null;
-  }
-
-  if (user.role !== allowedRole) {
+  if (!user || user.role !== allowedRole) {
+    if (!user) {
+      setTimeout(() => setLocation(`/login/${allowedRole}`), 0);
+    }
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
         <h1 className="text-4xl font-bold">403 Forbidden</h1>
